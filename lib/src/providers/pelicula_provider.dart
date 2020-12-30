@@ -26,7 +26,7 @@ class PeliculasProvider {
   Stream<List<Pelicula>> get popularesStream =>
       _popularesStreamController.stream;
 
-  //metodo para cerrar los streams
+  // metodo para cerrar los streams
   void disposeStreams() {
     _popularesStreamController.close();
   }
