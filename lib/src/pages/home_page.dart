@@ -3,6 +3,9 @@ import 'package:nextmovie/src/providers/pelicula_provider.dart';
 import 'package:nextmovie/src/widgets/card_horizontal.dart';
 import 'package:nextmovie/src/widgets/card_swiper_widget.dart';
 
+// importamos nuestro delegate de search
+import 'package:nextmovie/src/search/search_delegate.dart';
+
 class HomePage extends StatelessWidget {
   final peliculasProvider = new PeliculasProvider();
 
@@ -18,7 +21,13 @@ class HomePage extends StatelessWidget {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search),
-            onPressed: () {},
+            onPressed: () {
+              showSearch(
+                context: context,
+                delegate: DataSearch(),
+                //query
+              );
+            },
           ),
         ],
       ),
@@ -26,13 +35,30 @@ class HomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            SizedBox(height: 30.0),
+            SizedBox(height: 10.0),
+            _subtitle(context),
+            SizedBox(height: 1.0),
             _swiperTarjetas(),
             SizedBox(height: 60.0),
             _footer(context),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _subtitle(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.only(left: 10.0),
+          child: Text(
+            'Ultimos lanzamientos',
+            style: Theme.of(context).textTheme.subtitle2,
+            textScaleFactor: 1.4,
+          ),
+        ),
+      ],
     );
   }
 

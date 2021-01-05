@@ -19,6 +19,9 @@ class Peliculas {
 
 // correr en ctrl+shif+p -> paste json of code -> Respuesta
 class Pelicula {
+  //Se crea para no reventar la app y tener un id para el hero animation
+  String uniqueId;
+
   bool adult;
   String backdropPath;
   List<int> genreIds;
@@ -70,9 +73,18 @@ class Pelicula {
 
   getPosterImg() {
     if (posterPath == null) {
-      return 'https://i.pinimg.com/originals/88/f6/c1/88f6c14d05f2972452f424560f8a8ca3.png';
+      return 'https://redi.eu/wp-content/uploads/2015/08/not-available.png';
     } else {
       return 'https://image.tmdb.org/t/p/w500$posterPath';
+    }
+  }
+
+  getBackgroundImg() {
+    if (backdropPath == null) {
+      return 'https://corporalage.com/wp-content/plugins/wp-blog-manager/images/no-image-available.png';
+    } else {
+      print(this.id);
+      return 'https://image.tmdb.org/t/p/w500$backdropPath';
     }
   }
 }
