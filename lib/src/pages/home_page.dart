@@ -18,24 +18,22 @@ class _HomePageState extends State<HomePage> {
   final peliculasProvider = new PeliculasProvider();
 
   StreamSubscription _connectionChangeStream;
-  bool isOffline = false;
+  bool isOffline = true;
 
   @override
   void initState() {
-    super.initState();
     ConnectionStatusSingleton connectionStatus =
         ConnectionStatusSingleton.getInstance();
     _connectionChangeStream =
         connectionStatus.getconnectionChange().listen(connectionChanged);
+
+    super.initState();
   }
 
   void connectionChanged(dynamic hasConnection) {
     setState(() {
       isOffline = !hasConnection;
     });
-
-    peliculasProvider.getMoviePopulares();
-    peliculasProvider.getMovieEstreno();
   }
 
   @override
@@ -68,7 +66,7 @@ class _HomePageState extends State<HomePage> {
               : Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
-                    SizedBox(height: 10.0),
+                    _carga(),
                     _subtitle(context),
                     SizedBox(height: 1.0),
                     _swiperTarjetas(),
@@ -110,7 +108,7 @@ class _HomePageState extends State<HomePage> {
         Container(
           padding: EdgeInsets.only(left: 10.0),
           child: Text(
-            'Proximos estrenos',
+            'Actuales en cine',
             style: Theme.of(context).textTheme.subtitle2,
             textScaleFactor: 1.4,
           ),
@@ -185,7 +183,7 @@ class _HomePageState extends State<HomePage> {
           Container(
             padding: EdgeInsets.only(left: 10.0),
             child: Text(
-              'Peliculas en Estreno',
+              'Peliculas en estreno',
               style: Theme.of(context).textTheme.subtitle2,
               textScaleFactor: 1.4,
             ),
@@ -212,5 +210,11 @@ class _HomePageState extends State<HomePage> {
       ),
       width: double.infinity,
     );
+  }
+
+  Widget _carga() {
+    peliculasProvider.getMoviePopulares();
+    peliculasProvider.getMovieEstreno();
+    return SizedBox(height: 10.0);
   }
 }

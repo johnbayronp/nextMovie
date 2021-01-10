@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.nextmovie">
    <application
-        android:label="nextmovie"
+        android:label="NextMovie"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -45,6 +45,7 @@
 
 
     </application>
+    <!-- Permiso para acceder a internet -->
     <uses-permission android:name="android.permission.INTERNET"/>
 
 
