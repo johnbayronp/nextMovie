@@ -20,6 +20,7 @@ class _YoutubePlayerWidgetState extends State<YoutubePlayerWidget> {
   bool _muted = false;
   bool _isPlayerReady = false;
 
+  // ignore: deprecated_member_use
   List<String> _ids = new List();
 
   @override

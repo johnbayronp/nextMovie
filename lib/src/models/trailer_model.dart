@@ -1,4 +1,5 @@
 class Trailers {
+  // ignore: deprecated_member_use
   List<Trailer> trailers = new List();
 
   // Si tenemos una lista de trailers addicionarlos
@@ -46,9 +47,9 @@ class Trailer {
 
   getKeyForVideo() {
     if (key == null) {
-      return 'https://corporalage.com/wp-content/plugins/wp-blog-manager/images/no-image-available.png';
+      print('null');
+      return;
     } else {
-      print(this.id);
       return '$key';
     }
   }

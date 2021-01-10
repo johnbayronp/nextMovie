@@ -1,5 +1,6 @@
 class Peliculas {
   // Lista de items de peliculas
+  // ignore: deprecated_member_use
   List<Pelicula> items = new List();
   //Constructor
   Peliculas();

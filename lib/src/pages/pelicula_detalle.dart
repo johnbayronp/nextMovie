@@ -1,3 +1,5 @@
+import 'package:firebase_admob/firebase_admob.dart';
+
 import 'package:flutter/material.dart';
 import 'package:nextmovie/src/models/actores_model.dart';
 import 'package:nextmovie/src/models/pelicula_model.dart';
@@ -5,7 +7,39 @@ import 'package:nextmovie/src/models/trailer_model.dart';
 import 'package:nextmovie/src/providers/pelicula_provider.dart';
 import 'package:nextmovie/src/widgets/video_youtube_widget.dart';
 
-class PeliculaDetallePage extends StatelessWidget {
+class PeliculaDetallePage extends StatefulWidget {
+  @override
+  _PeliculaDetallePageState createState() => _PeliculaDetallePageState();
+}
+
+class _PeliculaDetallePageState extends State<PeliculaDetallePage> {
+  /* --- admob --- */
+  BannerAd myBannerAd;
+
+  BannerAd buildBannerAd() {
+    return BannerAd(
+        adUnitId: BannerAd.testAdUnitId,
+        size: AdSize.banner,
+        listener: (MobileAdEvent event) {
+          if (event == MobileAdEvent.loaded) {
+            myBannerAd..show();
+          }
+        });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    myBannerAd = buildBannerAd()..load();
+  }
+
+  @override
+  void dispose() {
+    myBannerAd.dispose();
+    super.dispose();
+  }
+
+  /// --- admob end -----
   @override
   Widget build(BuildContext context) {
     // recibir datos enviados de otra pantalla
@@ -21,9 +55,8 @@ class PeliculaDetallePage extends StatelessWidget {
                 SizedBox(height: 20.0),
                 _posterTitulo(context, pelicula),
                 _descripcion(context, pelicula),
-                _descripcion(context, pelicula),
-                _descripcion(context, pelicula),
                 _crearCasting(pelicula),
+                SizedBox(height: 20.0),
               ],
             ),
           ),
@@ -32,31 +65,30 @@ class PeliculaDetallePage extends StatelessWidget {
     );
   }
 
-  // Encabezdo de los detalles de pagina
   Widget _crearAppbar(Pelicula pelicula) {
     final peliProvider = new PeliculasProvider();
     return SliverAppBar(
       elevation: 2.0,
-      backgroundColor: Colors.indigoAccent,
+      backgroundColor: Colors.red[600],
       expandedHeight: 200.0,
       pinned: true,
       floating: false,
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
         /* title: Text(
-          pelicula.title,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            shadows: [
-              Shadow(
-                blurRadius: 10.0,
-                color: Colors.black38,
-                offset: Offset(1.0, 1.0),
-              ),
-            ],
-            color: Colors.white,
-          ),
-        ), */
+                          pelicula.title,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            shadows: [
+                              Shadow(
+                                blurRadius: 10.0,
+                                color: Colors.black38,
+                                offset: Offset(1.0, 1.0),
+                              ),
+                            ],
+                            color: Colors.white,
+                          ),
+                        ), */
         background: FutureBuilder(
           future: peliProvider.getTrailer(
             pelicula.id.toString(),
@@ -68,7 +100,7 @@ class PeliculaDetallePage extends StatelessWidget {
               for (int index = 0; index < snapshot.data.length; index++) {
                 trailer = snapshot.data[index];
               }
-              return YoutubePlayerWidget(trailer.key);
+              return YoutubePlayerWidget(trailer.getKeyForVideo());
             } else {
               return FadeInImage(
                 image: NetworkImage(pelicula.getBackgroundImg()),
@@ -80,16 +112,15 @@ class PeliculaDetallePage extends StatelessWidget {
           },
         ),
         /* FadeInImage(
-          image: NetworkImage(pelicula.getBackgroundImg()),
-          placeholder: AssetImage('assets/img/loading.gif'),
-          fadeInDuration: Duration(milliseconds: 150),
-          fit: BoxFit.cover,
-        ), */
+                          image: NetworkImage(pelicula.getBackgroundImg()),
+                          placeholder: AssetImage('assets/img/loading.gif'),
+                          fadeInDuration: Duration(milliseconds: 150),
+                          fit: BoxFit.cover,
+                        ), */
       ),
     );
   }
 
-  // Poster
   Widget _posterTitulo(BuildContext context, Pelicula pelicula) {
     final poster = Container(
       padding: EdgeInsets.symmetric(horizontal: 20.0),
@@ -141,7 +172,6 @@ class PeliculaDetallePage extends StatelessWidget {
     );
   }
 
-  // Descripcion
   Widget _descripcion(BuildContext context, Pelicula pelicula) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
@@ -161,7 +191,6 @@ class PeliculaDetallePage extends StatelessWidget {
     }
   }
 
-  // Cards of actores
   Widget _crearCasting(Pelicula pelicula) {
     final peliProvider = new PeliculasProvider();
 

@@ -12,29 +12,48 @@ class PeliculasProvider {
   String _url = 'https://api.themoviedb.org';
   String _apikey = '0ef9792d58851e36ea015db03f6ec76c';
   String _language = 'es-MX';
-
   int _popularesPage = 0;
+  int _estrenosPage = 0;
 
   //para controlar las acciones que se dispara para la siguiente pagina
-  bool _cargando = false;
+  bool _cargandoPopulares = false;
+  bool _cargandoEstrenos = false;
 
-  // Manejo del stream para el patron bloc ----------------------- ---
+// --- MANEJO PATRON BLOC MEDIANTE STREAM -----------------------
+//--- Creacion de nuestras listas y tipo
+
+  // ignore: deprecated_member_use
   List<Pelicula> _populares = new List();
+  // ignore: deprecated_member_use
+  List<Pelicula> _estrenos = new List();
+
+// ----- Creacion de nuestros controlladores broadcast ----------
   final _popularesStreamController =
       StreamController<List<Pelicula>>.broadcast();
 
-  // insertando la data ala tuberia StreamController
+  final _estrenosStreamController =
+      StreamController<List<Pelicula>>.broadcast();
+
+// ----- insertando la data ala tuberia StreamController ---------
   Function(List<Pelicula>) get popularesSink =>
       _popularesStreamController.sink.add;
 
-  // Escuchar la data de la salida de la tuberia
+  Function(List<Pelicula>) get estrenosSink =>
+      _estrenosStreamController.sink.add;
+
+// -------- Escuchar la data de la salida de la tuberia StreamController ------
   Stream<List<Pelicula>> get popularesStream =>
       _popularesStreamController.stream;
 
-  // metodo para cerrar los streams
+  Stream<List<Pelicula>> get estrenosStream => _estrenosStreamController.stream;
+
+// ------ Cerrando nuestras tuberias creadas -----------------
   void disposeStreams() {
     _popularesStreamController.close();
+    _estrenosStreamController.close();
   }
+
+// ------------------------- PETICIONES HTTP ASYNC - AWAIT --------------------
 
   // Procesar la respuesta
   Future<List<Pelicula>> _procesarRespuesta(String url) async {
@@ -47,7 +66,7 @@ class PeliculasProvider {
   // Obtener las peliculas nuevas
   Future<List<Pelicula>> getOnCines() async {
     String url = _url +
-        '/3/movie/now_playing' +
+        '/3/movie/upcoming' +
         '?api_key=' +
         _apikey +
         '&language=' +
@@ -60,9 +79,9 @@ class PeliculasProvider {
   // Obtener las peliculas populares
   Future<List<Pelicula>> getMoviePopulares() async {
     // una peticion por vez
-    if (_cargando) return [];
+    if (_cargandoPopulares) return [];
 
-    _cargando = true;
+    _cargandoPopulares = true;
     _popularesPage++;
 
     String url = _url +
@@ -82,7 +101,37 @@ class PeliculasProvider {
     popularesSink(_populares);
     // --------------------
 
-    _cargando = false;
+    _cargandoPopulares = false;
+
+    return resp;
+  }
+
+// Obtener las peliculas en estreno
+  Future<List<Pelicula>> getMovieEstreno() async {
+    // una peticion por vez
+    if (_cargandoEstrenos) return [];
+
+    _cargandoEstrenos = true;
+    _estrenosPage++;
+
+    String url = _url +
+        '/3/movie/upcoming' +
+        '?api_key=' +
+        _apikey +
+        '&language=' +
+        _language +
+        '&page=' +
+        _estrenosPage.toString();
+
+    //optimizado
+    final resp = await _procesarRespuesta(url);
+
+    // agregando la info al stream
+    _estrenos.addAll(resp);
+    estrenosSink(_estrenos);
+    // --------------------
+
+    _cargandoEstrenos = false;
 
     return resp;
   }
@@ -103,19 +152,23 @@ class PeliculasProvider {
     return cast.actores;
   }
 
-  // Finder Trailer
+  // Finder Trailer en español  -> sino idioma original
   Future<List<Trailer>> getTrailer(String pelId, String idioma) async {
     String url = _url +
         '/3/movie/$pelId/videos' +
         '?api_key=' +
         _apikey +
         '&language=' +
-        '$idioma';
+        'es';
     final res = await http.get(url);
     final decodedDate = json.decode(res.body);
     final peliTrailer = new Trailers.fromJsonList(decodedDate['results']);
 
-    return peliTrailer.trailers;
+    if (peliTrailer.trailers.length == 0) {
+      return _changeLanguage(peliTrailer.trailers, idioma, pelId);
+    } else {
+      return peliTrailer.trailers;
+    }
   }
 
   // Finder of peliculas
@@ -131,5 +184,23 @@ class PeliculasProvider {
 
     final res = await _procesarRespuesta(url);
     return res;
+  }
+
+  // Cambio de lenguaje trailer a ORIGINAL
+  Future<List<Trailer>> _changeLanguage(
+      List<Trailer> peliculaTrailer, String idioma, String pelId) async {
+    String url = _url +
+        '/3/movie/$pelId/videos' +
+        '?api_key=' +
+        _apikey +
+        '&language=' +
+        '$idioma';
+    final res = await http.get(url);
+    final decodedDate = json.decode(res.body);
+    final trailerOriginal = new Trailers.fromJsonList(decodedDate['results']);
+
+    return trailerOriginal.trailers.length == 0
+        ? null
+        : trailerOriginal.trailers;
   }
 }

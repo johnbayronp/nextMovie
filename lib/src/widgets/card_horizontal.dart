@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:nextmovie/src/censured/censured.dart';
 import 'package:nextmovie/src/models/pelicula_model.dart';
 
 class CardHorizontal extends StatelessWidget {
   final List<Pelicula> peliculas;
   final Function nextPagina;
+  final String name;
 
   final _pageController = new PageController(
     initialPage: 1,
@@ -11,12 +13,14 @@ class CardHorizontal extends StatelessWidget {
   );
 
   //Constructor
-  CardHorizontal({@required this.peliculas, @required this.nextPagina});
+  CardHorizontal(
+      {@required this.peliculas,
+      @required this.nextPagina,
+      @required this.name});
 
   @override
   Widget build(BuildContext context) {
     final _screenSize = MediaQuery.of(context).size;
-
     // Disparar el eveto al llegar al final
     _pageController.addListener(() {
       if (_pageController.position.pixels >=
@@ -30,7 +34,7 @@ class CardHorizontal extends StatelessWidget {
       child: PageView.builder(
         pageSnapping: false,
         controller: _pageController,
-        itemCount: peliculas.length,
+        itemCount: censuradoPeliculas(),
         itemBuilder: (context, index) {
           return _tarjeta(context, peliculas[index]);
         },
@@ -41,7 +45,7 @@ class CardHorizontal extends StatelessWidget {
   Widget _tarjeta(BuildContext context, Pelicula pelicula) {
     //Guardamos toda la configuracion de la tarjeta
 
-    pelicula.uniqueId = '${pelicula.id}-populares';
+    pelicula.uniqueId = '${pelicula.id}-$name';
 
     final tarjeta = Container(
       margin: EdgeInsets.only(right: 6.0),
@@ -81,5 +85,21 @@ class CardHorizontal extends StatelessWidget {
       },
       child: tarjeta,
     );
+  }
+
+  censuradoPeliculas<int>() {
+    for (var i = 0; i < peliculas.length; i++) {
+      for (var word in wordsCensured) {
+        if (word == peliculas[i].title) {
+          peliculas.remove(peliculas[i]);
+        }
+      }
+
+      if (peliculas[i].originalLanguage == 'ja' ||
+          peliculas[i].originalLanguage == 'zh') {
+        peliculas.remove(peliculas[i]);
+      }
+    }
+    return peliculas.length;
   }
 }
