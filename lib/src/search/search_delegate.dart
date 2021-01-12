@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nextmovie/src/censured/censured.dart';
 import 'package:nextmovie/src/models/pelicula_model.dart';
 import 'package:nextmovie/src/providers/pelicula_provider.dart';
 
@@ -62,10 +63,11 @@ class DataSearch extends SearchDelegate {
     }
 
     return FutureBuilder(
-      future: peliculasProvider.buscarPelicula(query),
+      future: peliculasProvider.buscarPelicula(censuradoQuery(query)),
       builder: (BuildContext context, AsyncSnapshot<List<Pelicula>> snapshot) {
         if (snapshot.hasData) {
           final peliculas = snapshot.data;
+          censuradoPeliculas(peliculas);
 
           return ListView(
               children: peliculas.map((pelicula) {
@@ -110,5 +112,26 @@ class DataSearch extends SearchDelegate {
         );
       },
     ); */
+  }
+
+  void censuradoPeliculas(List<Pelicula> peliculas) {
+    for (var i = 0; i < peliculas.length; i++) {
+      // string.contains print(peliculas[i].title);
+      if (peliculas[i].originalLanguage == 'ja' ||
+          peliculas[i].originalLanguage == 'zh' ||
+          peliculas[i].originalLanguage == 'fi' ||
+          peliculas[i].originalLanguage == 'sv') {
+        peliculas.remove(peliculas[i]);
+      }
+    }
+  }
+
+  censuradoQuery<String>(query) {
+    for (var x = 0; x < wordsCensured.length; x++) {
+      if (query.toUpperCase().contains(wordsCensured[x])) {
+        return '231se24r';
+      }
+    }
+    return query;
   }
 }

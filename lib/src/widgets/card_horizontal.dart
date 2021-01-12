@@ -58,7 +58,7 @@ class CardHorizontal extends StatelessWidget {
                 image: NetworkImage(pelicula.getPosterImg()),
                 placeholder: AssetImage('assets/img/loading.gif'),
                 fit: BoxFit.cover,
-                height: 180.0,
+                height: 170.0,
               ),
               borderRadius: BorderRadius.circular(10.0),
             ),
@@ -89,14 +89,10 @@ class CardHorizontal extends StatelessWidget {
 
   censuradoPeliculas<int>() {
     for (var i = 0; i < peliculas.length; i++) {
-      for (var word in wordsCensured) {
-        if (word == peliculas[i].title) {
-          peliculas.remove(peliculas[i]);
-        }
-      }
-
       if (peliculas[i].originalLanguage == 'ja' ||
-          peliculas[i].originalLanguage == 'zh') {
+          peliculas[i].originalLanguage == 'zh' ||
+          peliculas[i].originalLanguage == 'fi' ||
+          peliculas[i].originalLanguage == 'sv') {
         peliculas.remove(peliculas[i]);
       }
     }

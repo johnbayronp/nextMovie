@@ -84,7 +84,6 @@ class Pelicula {
     if (backdropPath == null) {
       return 'https://corporalage.com/wp-content/plugins/wp-blog-manager/images/no-image-available.png';
     } else {
-      print(this.id);
       return 'https://image.tmdb.org/t/p/w500$backdropPath';
     }
   }

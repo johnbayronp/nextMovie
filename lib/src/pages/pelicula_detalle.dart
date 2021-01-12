@@ -13,18 +13,19 @@ class PeliculaDetallePage extends StatefulWidget {
 }
 
 class _PeliculaDetallePageState extends State<PeliculaDetallePage> {
-  /* --- admob --- */
+  /* --- Admob --- */
   BannerAd myBannerAd;
 
   BannerAd buildBannerAd() {
     return BannerAd(
-        adUnitId: BannerAd.testAdUnitId,
-        size: AdSize.banner,
-        listener: (MobileAdEvent event) {
-          if (event == MobileAdEvent.loaded) {
-            myBannerAd..show();
-          }
-        });
+      adUnitId: 'ca-app-pub-8321174993863627~9939874519',
+      size: AdSize.banner,
+      listener: (MobileAdEvent event) {
+        if (event == MobileAdEvent.loaded) {
+          myBannerAd..show();
+        }
+      },
+    );
   }
 
   @override
@@ -56,7 +57,8 @@ class _PeliculaDetallePageState extends State<PeliculaDetallePage> {
                 _posterTitulo(context, pelicula),
                 _descripcion(context, pelicula),
                 _crearCasting(pelicula),
-                SizedBox(height: 20.0),
+                _creditodb(),
+                SizedBox(height: 50.0),
               ],
             ),
           ),
@@ -150,10 +152,48 @@ class _PeliculaDetallePageState extends State<PeliculaDetallePage> {
                     style: Theme.of(context).textTheme.caption,
                     overflow: TextOverflow.ellipsis),
                 SizedBox(height: 10.0),
-                Row(
+                Column(
                   children: [
-                    Icon(Icons.star_border),
-                    Text(pelicula.voteAverage.toString()),
+                    Row(
+                      children: <Widget>[
+                        Icon(Icons.star_border),
+                        SizedBox(width: 3.0),
+                        Text(pelicula.voteAverage.toString()),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(Icons.people),
+                        SizedBox(width: 3.0),
+                        Text(
+                          '${pelicula.popularity}',
+                          style: Theme.of(context).textTheme.caption,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(Icons.confirmation_num),
+                        SizedBox(width: 3.0),
+                        Text(
+                          '${pelicula.releaseDate}',
+                          style: Theme.of(context).textTheme.caption,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(Icons.closed_caption),
+                        SizedBox(width: 3.0),
+                        Text(
+                          'Idioma Original ${pelicula.originalLanguage.toUpperCase()}',
+                          style: Theme.of(context).textTheme.caption,
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ],
@@ -242,6 +282,26 @@ class _PeliculaDetallePageState extends State<PeliculaDetallePage> {
           Text(
             actor.name,
             style: Theme.of(context).textTheme.caption,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _creditodb() {
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image(
+                image: AssetImage('assets/img/themovdb.png'),
+                width: 200,
+              ),
+              SizedBox(height: 3)
+            ],
           ),
         ],
       ),

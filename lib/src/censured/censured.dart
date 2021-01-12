@@ -1,10 +1,16 @@
 final wordsCensured = [
-  'sex',
-  'xxx',
-  'Las brujas',
-  'brujeria',
-  'demonio',
-  'Playhouse',
-  'el diablo',
-  'So'
+  'SEX',
+  'SEXO',
+  'PORNO',
+  'XXX',
+  'BRUJAS',
+  'XX',
+  'XY',
+  'LAS BRUJAS',
+  'BRUJERIA',
+  'DEMONIOS',
+  'DIABLO',
+  'SATANISMO',
+  'HOST',
+  'LAS BRU'
 ];

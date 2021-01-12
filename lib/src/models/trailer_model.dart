@@ -47,7 +47,6 @@ class Trailer {
 
   getKeyForVideo() {
     if (key == null) {
-      print('null');
       return;
     } else {
       return '$key';
