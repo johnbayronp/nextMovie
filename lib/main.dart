@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:nextmovie/src/pages/home_page.dart';
 import 'package:nextmovie/src/pages/pelicula_detalle.dart';
 import 'package:nextmovie/src/providers/conex_provider.dart';
+//Ads
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 void main() async {
   //Conexion de datos
@@ -9,6 +11,9 @@ void main() async {
   ConnectionStatusSingleton connectionStatus =
       ConnectionStatusSingleton.getInstance();
   connectionStatus.initialize();
+
+  // Inicializar admob
+  MobileAds.instance.initialize();
 
   runApp(MyApp());
 }

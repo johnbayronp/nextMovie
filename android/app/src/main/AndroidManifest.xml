@@ -41,7 +41,7 @@
         <!-- admob credentials-->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-8321174993863627~9939874519"/>
+            android:value="ca-app-pub-8321174993863627/4707691143"/>
 
 
     </application>

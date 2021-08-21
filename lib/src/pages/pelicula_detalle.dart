@@ -1,5 +1,6 @@
-import 'package:firebase_admob/firebase_admob.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter/material.dart';
+import 'package:nextmovie/src/helpers/adHelper.dart';
 import 'package:nextmovie/src/models/actores_model.dart';
 import 'package:nextmovie/src/models/pelicula_model.dart';
 import 'package:nextmovie/src/models/trailer_model.dart';
@@ -7,36 +8,39 @@ import 'package:nextmovie/src/providers/pelicula_provider.dart';
 import 'package:nextmovie/src/widgets/video_youtube_widget.dart';
 
 class PeliculaDetallePage extends StatefulWidget {
+  get entries => null;
+
   @override
   _PeliculaDetallePageState createState() => _PeliculaDetallePageState();
 }
 
 class _PeliculaDetallePageState extends State<PeliculaDetallePage> {
-  /* --- Admob --- */
-  BannerAd myBannerAd;
-
-  BannerAd buildBannerAd() {
-    return BannerAd(
-      adUnitId: 'ca-app-pub-8321174993863627~9939874519',
-      size: AdSize.banner,
-      listener: (MobileAdEvent event) {
-        if (event == MobileAdEvent.loaded) {
-          myBannerAd..show();
-        }
-      },
-    );
-  }
+  //admob start
+  BannerAd _ad;
+  bool _isAdLoaded = false;
 
   @override
   void initState() {
     super.initState();
-    myBannerAd = buildBannerAd()..load();
-  }
+    // Create bannerAd instance
+    _ad = BannerAd(
+      adUnitId: AdHelper.bannerAdUnitId,
+      size: AdSize.banner,
+      request: AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          setState(() {
+            _isAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          ad.dispose();
+          print('Ad load failed (code=${error.code} message=${error.message})');
+        },
+      ),
+    );
 
-  @override
-  void dispose() {
-    myBannerAd.dispose();
-    super.dispose();
+    _ad.load();
   }
 
   /// --- admob end -----
@@ -58,11 +62,21 @@ class _PeliculaDetallePageState extends State<PeliculaDetallePage> {
                 _crearCasting(pelicula),
                 _creditodb(),
                 SizedBox(height: 50.0),
+                _bannerAds()
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _bannerAds() {
+    return Container(
+      child: AdWidget(ad: _ad),
+      width: _ad.size.width.toDouble(),
+      height: 72.0,
+      alignment: Alignment.bottomCenter,
     );
   }
 
@@ -237,6 +251,7 @@ class _PeliculaDetallePageState extends State<PeliculaDetallePage> {
       future: peliProvider.getCast(pelicula.id.toString()),
       builder: (context, AsyncSnapshot<List> snapshot) {
         if (snapshot.hasData) {
+          print(snapshot.data);
           return _crearActoresPageView(snapshot.data);
         } else {
           return Center(child: CircularProgressIndicator());
@@ -305,5 +320,11 @@ class _PeliculaDetallePageState extends State<PeliculaDetallePage> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _ad.dispose();
+    super.dispose();
   }
 }

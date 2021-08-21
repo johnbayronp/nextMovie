@@ -44,8 +44,8 @@ android {
         applicationId "com.bapesu.nextmovie"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 15 //flutterVersionCode.toInteger()
-        versionName "1.0.3"
+        versionCode 16 //flutterVersionCode.toInteger()
+        versionName "1.0.5"
         ndk.abiFilters 'armeabi-v7a','arm64-v8a','x86','x86_64'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true // Error multidex 64k
