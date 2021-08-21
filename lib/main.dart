@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:nextmovie/src/pages/home_page.dart';
 import 'package:nextmovie/src/pages/pelicula_detalle.dart';
 import 'package:nextmovie/src/providers/conex_provider.dart';

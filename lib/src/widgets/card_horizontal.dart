@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:nextmovie/src/censured/censured.dart';
 import 'package:nextmovie/src/models/pelicula_model.dart';
 
 class CardHorizontal extends StatelessWidget {

@@ -1,5 +1,4 @@
 import 'package:firebase_admob/firebase_admob.dart';
-
 import 'package:flutter/material.dart';
 import 'package:nextmovie/src/models/actores_model.dart';
 import 'package:nextmovie/src/models/pelicula_model.dart';

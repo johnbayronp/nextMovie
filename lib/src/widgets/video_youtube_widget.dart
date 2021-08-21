@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+// ignore: must_be_immutable
 class YoutubePlayerWidget extends StatefulWidget {
   String keyVideo;
   YoutubePlayerWidget(this.keyVideo) : super();
@@ -14,9 +15,13 @@ class _YoutubePlayerWidgetState extends State<YoutubePlayerWidget> {
   TextEditingController _idController;
   TextEditingController _seekToController;
 
+  // ignore: unused_field
   PlayerState _playerState;
+  // ignore: unused_field
   YoutubeMetaData _videoMetaData;
+  // ignore: unused_field
   double _volume = 100;
+  // ignore: unused_field
   bool _muted = false;
   bool _isPlayerReady = false;
 

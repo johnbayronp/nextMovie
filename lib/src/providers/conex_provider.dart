@@ -12,9 +12,11 @@ class ConnectionStatusSingleton {
   static ConnectionStatusSingleton getInstance() => _singleton;
   //This tracks the current connection status
   bool hasConnection = false;
+
   //This is how we'll allow subscribing to connection changes
   StreamController connectionChangeController =
       new StreamController.broadcast();
+
   //flutter_connectivity
   final Connectivity _connectivity = Connectivity();
   //Hook into flutter_connectivity's Stream to listen for changes
