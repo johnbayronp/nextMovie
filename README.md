@@ -1,2 +1,2 @@
 # nextMovie
-Application of movies development on flutter
+Application of trailers movies development on flutter
