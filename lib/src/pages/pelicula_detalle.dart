@@ -59,10 +59,10 @@ class _PeliculaDetallePageState extends State<PeliculaDetallePage> {
                 SizedBox(height: 20.0),
                 _posterTitulo(context, pelicula),
                 _descripcion(context, pelicula),
+                _bannerAds(),
                 _crearCasting(pelicula),
                 _creditodb(),
-                SizedBox(height: 50.0),
-                _bannerAds()
+                SizedBox(height: 50.0)
               ],
             ),
           ),
@@ -251,7 +251,6 @@ class _PeliculaDetallePageState extends State<PeliculaDetallePage> {
       future: peliProvider.getCast(pelicula.id.toString()),
       builder: (context, AsyncSnapshot<List> snapshot) {
         if (snapshot.hasData) {
-          print(snapshot.data);
           return _crearActoresPageView(snapshot.data);
         } else {
           return Center(child: CircularProgressIndicator());
